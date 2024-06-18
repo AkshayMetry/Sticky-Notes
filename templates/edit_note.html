@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Note</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="header text-center mb-4">
+            <h1>Edit Note</h1>
+        </div>
+        <form action="/edit_note/{{ note_id }}" method="post" class="form-inline justify-content-center">
+            <!-- Input fields for editing a note -->
+            <input type="text" name="note_text" class="form-control mr-2" value="{{ note.text }}" style="color: grey; width: 400px">
+            <select name="note_color" class="form-control mr-2">
+                <!-- Options for note color selection -->
+                <option value="yellow" {% if note.color == 'yellow' %}selected{% endif %}>Yellow</option>
+                <option value="lightblue" {% if note.color == 'lightblue' %}selected{% endif %}>Blue</option>
+                <option value="pink" {% if note.color == 'pink' %}selected{% endif %}>Pink</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

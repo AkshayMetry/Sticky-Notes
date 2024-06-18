@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sticky Notes App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .header {
+           
+            color: rgb(0, 0, 0);
+            padding: 20px;
+        }
+
+        .note-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .note {
+            width: calc(20% - 20px);
+            min-height: 200px;
+            border: 1px solid #ddd;
+            margin: 10px;
+            padding: 15px;
+            overflow: auto;
+            box-sizing: border-box;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .note:hover {
+            transform: scale(1.05);
+        }
+
+        .yellow {
+            background-color: #fff3cd;
+        }
+
+        .lightblue {
+            background-color: #cce5ff;
+        }
+
+        .pink {
+            background-color: #f8d7da;
+        }
+
+        .form-control {
+            width: auto;
+        }
+
+        .note p {
+            margin-bottom: 1rem;
+        }
+
+        .btn-action {
+            /* background-color: transparent; */
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .btn-delete {
+            
+            right: 70px; 
+        }
+
+        /* .btn-edit {
+            color: #007bff;
+        } */
+
+        /* .btn-delete:hover {
+            color: #bd2130;
+        } */
+
+        .btn-edit:hover {
+            color: #0056b3;
+        }
+
+    </style>
+    <script>
+        function editNote(noteId) {
+            document.getElementById('note-text-' + noteId).style.display = 'none';
+            document.getElementById('edit-form-' + noteId).style.display = 'block';
+        }
+
+        function cancelEdit(noteId) {
+            document.getElementById('note-text-' + noteId).style.display = 'block';
+            document.getElementById('edit-form-' + noteId).style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="header text-center">
+            <h1>Sticky Notes App</h1>
+            
+            <form action="/add_note" method="post" class="form-inline justify-content-center">
+                <!-- Input fields for adding a new note -->
+                <input type="text" name="note_text" class="form-control mr-2" placeholder="Take a note..." style="color: grey; width: 400px">
+                <select name="note_color" class="form-control mr-2">
+                    <!-- Options for note color selection -->
+                    <option value="yellow">Yellow</option>
+                    <option value="lightblue">Blue</option>
+                    <option value="pink">Pink</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+
+        <div class="note-container">
+            {% for note in notes %}
+            <!-- Display existing notes -->
+            <div class="note {{ note.color }}">
+                <div id="note-text-{{ loop.index0 }}">
+                    <p>{{ note.text }}</p>
+                </div>
+                <div id="edit-form-{{ loop.index0 }}" style="display: none;">
+                    <form action="/edit_note/{{ loop.index0 }}" method="post">
+                        <input type="text" name="note_text" class="form-control mb-2" value="{{ note.text }}" style="width: 80%; display: inline;">
+                        <select name="note_color" class="form-control mb-2" style="width: 80%; display: inline;">
+                            <!-- Options for note color selection -->
+                            <option value="yellow" {% if note.color == 'yellow' %}selected{% endif %}>Yellow</option>
+                            <option value="lightblue" {% if note.color == 'lightblue' %}selected{% endif %}>Blue</option>
+                            <option value="pink" {% if note.color == 'pink' %}selected{% endif %}>Pink</option>
+                        </select>
+                        <button type="submit" class="btn btn-success mb-2">Save</button>
+                        <button type="button" class="btn btn-secondary mb-2" onclick="cancelEdit({{ loop.index0 }})">Cancel</button>
+                    </form>
+                </div>
+                <form action="/delete_note/{{ loop.index0 }}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-action btn-delete">Delete</button>
+                </form>
+                <button type="button" class="btn btn-primary btn-action" onclick="editNote({{ loop.index0 }})">Edit</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
